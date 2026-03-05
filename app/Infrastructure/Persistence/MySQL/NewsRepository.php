@@ -13,16 +13,13 @@ use App\Domain\ValueObjects\NewsId;
 use InvalidArgumentException;
 use PDO;
 
-final class NewsRepository implements NewsRepositoryInterface
-{
+final class NewsRepository implements NewsRepositoryInterface {
     public function __construct(
         private Connection $connection,
         private LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
-    public function getById(NewsId $id): News
-    {
+    public function getById(NewsId $id): News {
         $this->logger->info('Fetching news by ID', ['id' => $id->getValue()]);
 
         $sql = 'SELECT * FROM news WHERE id = :id';
@@ -42,8 +39,7 @@ final class NewsRepository implements NewsRepositoryInterface
         return $this->mapRowToEntity($data);
     }
 
-    public function getLatest(): News
-    {
+    public function getLatest(): News {
         $this->logger->info('Fetching latest news');
 
         $sql = 'SELECT * FROM news ORDER BY date DESC LIMIT 1';
@@ -66,8 +62,7 @@ final class NewsRepository implements NewsRepositoryInterface
     /**
      * @return array<int, News>
      */
-    public function getPaginated(int $page, int $perPage): array
-    {
+    public function getPaginated(int $page, int $perPage): array {
         $this->logger->info('Fetching paginated news', ['page' => $page, 'perPage' => $perPage]);
 
         $offset = ($page - 1) * $perPage;
@@ -91,15 +86,14 @@ final class NewsRepository implements NewsRepositoryInterface
         }
 
         $this->logger->info('Paginated news fetched', [
-            'page' => $page,
+            'page'  => $page,
             'count' => count($news),
         ]);
 
         return $news;
     }
 
-    public function getTotalCount(): int
-    {
+    public function getTotalCount(): int {
         $this->logger->info('Fetching total news count');
 
         $sql = 'SELECT COUNT(*) as total FROM news';
@@ -110,9 +104,7 @@ final class NewsRepository implements NewsRepositoryInterface
         $result = $stmt->fetch();
 
         if (
-            !is_array($result) ||
-            !array_key_exists('total', $result) ||
-            !is_numeric($result['total'])
+            !is_array($result) || !array_key_exists('total', $result) || !is_numeric($result['total'])
         ) {
             $this->logger->error('Failed to fetch total news count');
             return 0;
@@ -128,16 +120,15 @@ final class NewsRepository implements NewsRepositoryInterface
     /**
      * @param array<string, mixed> $row
      */
-    private function mapRowToEntity(array $row): News
-    {
+    private function mapRowToEntity(array $row): News {
         $this->validateRow($row);
 
-        $id = (int) $row['id'];
-        $date = (string) $row['date'];
-        $title = (string) $row['title'];
+        $id       = (int) $row['id'];
+        $date     = (string) $row['date'];
+        $title    = (string) $row['title'];
         $announce = (string) $row['announce'];
-        $content = (string) $row['content'];
-        $image = (string) $row['image'];
+        $content  = (string) $row['content'];
+        $image    = (string) $row['image'];
 
         return new News(
             new NewsId($id),
@@ -160,8 +151,7 @@ final class NewsRepository implements NewsRepositoryInterface
      *     image: string
      * } $row
      */
-    private function validateRow(array $row): void
-    {
+    private function validateRow(array $row): void {
         $requiredKeys = ['id', 'date', 'title', 'announce', 'content', 'image'];
 
         foreach ($requiredKeys as $key) {

@@ -10,10 +10,8 @@ use App\Domain\ValueObjects\NewsId;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-final class NewsTest extends TestCase
-{
-    public function test_create_valid_news_entity(): void
-    {
+final class NewsTest extends TestCase {
+    public function test_create_valid_news_entity(): void {
         $news = new News(
             new NewsId(1),
             NewsDate::fromString('2026-03-05 12:00:00'),
@@ -31,8 +29,7 @@ final class NewsTest extends TestCase
         self::assertSame('image.jpg', $news->getImage());
     }
 
-    public function test_create_news_with_empty_title_throws_exception(): void
-    {
+    public function test_create_news_with_empty_title_throws_exception(): void {
         $this->expectException(InvalidArgumentException::class);
 
         new News(
@@ -45,8 +42,7 @@ final class NewsTest extends TestCase
         );
     }
 
-    public function test_create_news_with_empty_announce_throws_exception(): void
-    {
+    public function test_create_news_with_empty_announce_throws_exception(): void {
         $this->expectException(InvalidArgumentException::class);
 
         new News(
@@ -59,8 +55,7 @@ final class NewsTest extends TestCase
         );
     }
 
-    public function test_create_news_with_empty_content_throws_exception(): void
-    {
+    public function test_create_news_with_empty_content_throws_exception(): void {
         $this->expectException(InvalidArgumentException::class);
 
         new News(
@@ -73,8 +68,7 @@ final class NewsTest extends TestCase
         );
     }
 
-    public function test_create_news_with_empty_image_throws_exception(): void
-    {
+    public function test_create_news_with_empty_image_throws_exception(): void {
         $this->expectException(InvalidArgumentException::class);
 
         new News(

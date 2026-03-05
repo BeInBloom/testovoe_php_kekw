@@ -11,23 +11,20 @@ use App\Domain\Contracts\LoggerInterface;
 use App\Domain\ValueObjects\NewsId;
 use Throwable;
 
-final readonly class NewsController
-{
+final readonly class NewsController {
     public function __construct(
         private NewsServiceInterface $newsService,
-        private LoggerInterface $logger
-    ) {
-    }
+        private LoggerInterface $logger,
+    ) {}
 
-    public function index(int $page = 1): NewsListDTO
-    {
+    public function index(int $page = 1): NewsListDTO {
         try {
             $this->logger->info('Controller: News index', ['page' => $page]);
 
             return $this->newsService->getNewsList($page);
         } catch (Throwable $e) {
             $this->logger->error('Error in news index controller', [
-                'page' => $page,
+                'page'  => $page,
                 'error' => $e->getMessage(),
             ]);
 
@@ -35,8 +32,7 @@ final readonly class NewsController
         }
     }
 
-    public function detail(int $id): NewsDetailDTO
-    {
+    public function detail(int $id): NewsDetailDTO {
         try {
             $this->logger->info('Controller: News detail', ['id' => $id]);
 
@@ -45,7 +41,7 @@ final readonly class NewsController
             return $this->newsService->getNewsDetail($newsId);
         } catch (Throwable $e) {
             $this->logger->error('Error in news detail controller', [
-                'id' => $id,
+                'id'    => $id,
                 'error' => $e->getMessage(),
             ]);
 

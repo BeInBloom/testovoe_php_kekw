@@ -8,10 +8,8 @@ use App\Domain\Exceptions\NewsNotFoundException;
 use InvalidArgumentException;
 use Throwable;
 
-final class HttpErrorMapper
-{
-    public function map(Throwable $exception): HttpError
-    {
+final class HttpErrorMapper {
+    public function map(Throwable $exception): HttpError {
         if ($exception instanceof InvalidArgumentException) {
             return new HttpError(400, 'Invalid request parameters.');
         }

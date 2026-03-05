@@ -14,10 +14,8 @@ use App\Domain\ValueObjects\NewsDate;
 use App\Domain\ValueObjects\NewsId;
 use PHPUnit\Framework\TestCase;
 
-final class CriticalNewsFlowSmokeTest extends TestCase
-{
-    public function test_can_get_news_list_for_first_page(): void
-    {
+final class CriticalNewsFlowSmokeTest extends TestCase {
+    public function test_can_get_news_list_for_first_page(): void {
         $news = [
             $this->createNews(1, 'Alpha'),
             $this->createNews(2, 'Beta'),
@@ -39,8 +37,7 @@ final class CriticalNewsFlowSmokeTest extends TestCase
         self::assertTrue($list->hasNextPage);
     }
 
-    private function createNews(int $id, string $title): News
-    {
+    private function createNews(int $id, string $title): News {
         return new News(
             new NewsId($id),
             NewsDate::fromString('2026-03-05 12:00:00'),
@@ -55,21 +52,18 @@ final class CriticalNewsFlowSmokeTest extends TestCase
 /**
  * @internal
  */
-final class SmokeNewsRepository implements NewsRepositoryInterface
-{
+final class SmokeNewsRepository implements NewsRepositoryInterface {
     /** @var array<int, News> */
     private array $news;
 
     /**
      * @param array<int, News> $news
      */
-    public function __construct(array $news)
-    {
+    public function __construct(array $news) {
         $this->news = array_values($news);
     }
 
-    public function getById(NewsId $id): News
-    {
+    public function getById(NewsId $id): News {
         foreach ($this->news as $item) {
             if ($item->getId()->equals($id)) {
                 return $item;
@@ -79,8 +73,7 @@ final class SmokeNewsRepository implements NewsRepositoryInterface
         throw NewsNotFoundException::byId($id->getValue());
     }
 
-    public function getLatest(): News
-    {
+    public function getLatest(): News {
         if ($this->news === []) {
             throw NewsNotFoundException::latest();
         }
@@ -91,13 +84,11 @@ final class SmokeNewsRepository implements NewsRepositoryInterface
     /**
      * @return array<int, News>
      */
-    public function getPaginated(int $page, int $perPage): array
-    {
+    public function getPaginated(int $page, int $perPage): array {
         return array_slice($this->news, ($page - 1) * $perPage, $perPage);
     }
 
-    public function getTotalCount(): int
-    {
+    public function getTotalCount(): int {
         return count($this->news);
     }
 }
@@ -105,20 +96,16 @@ final class SmokeNewsRepository implements NewsRepositoryInterface
 /**
  * @internal
  */
-final class SmokePagination implements PaginationInterface
-{
-    public function getCurrentPage(): int
-    {
+final class SmokePagination implements PaginationInterface {
+    public function getCurrentPage(): int {
         return 1;
     }
 
-    public function getTotalPages(int $total, int $perPage): int
-    {
+    public function getTotalPages(int $total, int $perPage): int {
         return (int) ceil($total / $perPage);
     }
 
-    public function hasNextPage(int $currentPage, int $total, int $perPage): bool
-    {
+    public function hasNextPage(int $currentPage, int $total, int $perPage): bool {
         return $currentPage < $this->getTotalPages($total, $perPage);
     }
 }
@@ -126,26 +113,19 @@ final class SmokePagination implements PaginationInterface
 /**
  * @internal
  */
-final class SmokeLogger implements LoggerInterface
-{
+final class SmokeLogger implements LoggerInterface {
     /**
      * @param array<string, mixed> $context
      */
-    public function info(string $message, array $context = []): void
-    {
-    }
+    public function info(string $message, array $context = []): void {}
 
     /**
      * @param array<string, mixed> $context
      */
-    public function error(string $message, array $context = []): void
-    {
-    }
+    public function error(string $message, array $context = []): void {}
 
     /**
      * @param array<string, mixed> $context
      */
-    public function warning(string $message, array $context = []): void
-    {
-    }
+    public function warning(string $message, array $context = []): void {}
 }

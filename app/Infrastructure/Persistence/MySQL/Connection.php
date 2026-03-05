@@ -8,8 +8,7 @@ use App\Domain\Contracts\LoggerInterface;
 use PDO;
 use PDOException;
 
-final readonly class Connection
-{
+final readonly class Connection {
     private PDO $pdo;
     private LoggerInterface $logger;
 
@@ -26,19 +25,19 @@ final readonly class Connection
             $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $host, $database);
 
             $this->pdo = new PDO($dsn, $user, $password, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_EMULATE_PREPARES   => false,
             ]);
 
             $this->logger->info('Database connection established', [
-                'host' => $host,
+                'host'     => $host,
                 'database' => $database,
             ]);
         } catch (PDOException $e) {
             $this->logger->error('Database connection failed', [
-                'error' => $e->getMessage(),
-                'host' => $host,
+                'error'    => $e->getMessage(),
+                'host'     => $host,
                 'database' => $database,
             ]);
 
@@ -46,8 +45,7 @@ final readonly class Connection
         }
     }
 
-    public function getPDO(): PDO
-    {
+    public function getPDO(): PDO {
         return $this->pdo;
     }
 }

@@ -16,12 +16,10 @@ use App\Infrastructure\Persistence\MySQL\NewsRepository;
 use DI\ContainerBuilder;
 use RuntimeException;
 
-final readonly class Container
-{
+final readonly class Container {
     private \DI\Container $container;
 
-    public function __construct()
-    {
+    public function __construct() {
         $builder = new ContainerBuilder();
 
         $this->configureContainer($builder);
@@ -29,21 +27,18 @@ final readonly class Container
         $this->container = $builder->build();
     }
 
-    public function get(string $id): mixed
-    {
+    public function get(string $id): mixed {
         return $this->container->get($id);
     }
 
-    public function getContainer(): \DI\Container
-    {
+    public function getContainer(): \DI\Container {
         return $this->container;
     }
 
     /**
      * @param ContainerBuilder<\DI\Container> $builder
      */
-    private function configureContainer(ContainerBuilder $builder): void
-    {
+    private function configureContainer(ContainerBuilder $builder): void {
         $builder->addDefinitions([
             LoggerInterface::class => fn () => new FileLogger(
                 $_ENV['LOG_PATH'] ?? __DIR__ . '/../../storage/logs/app.log'
@@ -67,7 +62,7 @@ final readonly class Container
 
             NewsRepositoryInterface::class => function (\DI\Container $c): NewsRepository {
                 $connection = $c->get(Connection::class);
-                $logger = $c->get(LoggerInterface::class);
+                $logger     = $c->get(LoggerInterface::class);
 
                 if (!$connection instanceof Connection) {
                     throw new RuntimeException('Configured connection must be Connection instance');
@@ -84,8 +79,8 @@ final readonly class Container
 
             NewsServiceInterface::class => function (\DI\Container $c): NewsService {
                 $newsRepository = $c->get(NewsRepositoryInterface::class);
-                $pagination = $c->get(PaginationInterface::class);
-                $logger = $c->get(LoggerInterface::class);
+                $pagination     = $c->get(PaginationInterface::class);
+                $logger         = $c->get(LoggerInterface::class);
 
                 if (!$newsRepository instanceof NewsRepositoryInterface) {
                     throw new RuntimeException('Configured repository does not implement NewsRepositoryInterface');

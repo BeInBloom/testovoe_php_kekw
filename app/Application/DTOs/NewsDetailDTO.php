@@ -6,8 +6,7 @@ namespace App\Application\DTOs;
 
 use InvalidArgumentException;
 
-final readonly class NewsDetailDTO
-{
+final readonly class NewsDetailDTO {
     public int $id;
     public string $date;
     public string $title;
@@ -30,12 +29,12 @@ final readonly class NewsDetailDTO
         $this->validateString($content, 'Content');
         $this->validateString($image, 'Image');
 
-        $this->id = $id;
-        $this->date = $date;
-        $this->title = $title;
+        $this->id       = $id;
+        $this->date     = $date;
+        $this->title    = $title;
         $this->announce = $announce;
-        $this->content = $content;
-        $this->image = $image;
+        $this->content  = $content;
+        $this->image    = $image;
     }
 
     /**
@@ -48,8 +47,7 @@ final readonly class NewsDetailDTO
      *     image: string
      * } $data
      */
-    public static function fromArray(array $data): self
-    {
+    public static function fromArray(array $data): self {
         return new self(
             $data['id'],
             $data['date'],
@@ -70,34 +68,30 @@ final readonly class NewsDetailDTO
      *     image: string
      * }
      */
-    public function toArray(): array
-    {
+    public function toArray(): array {
         return [
-            'id' => $this->id,
-            'date' => $this->date,
-            'title' => $this->title,
+            'id'       => $this->id,
+            'date'     => $this->date,
+            'title'    => $this->title,
             'announce' => $this->announce,
-            'content' => $this->content,
-            'image' => $this->image,
+            'content'  => $this->content,
+            'image'    => $this->image,
         ];
     }
 
-    private function validateId(int $id): void
-    {
+    private function validateId(int $id): void {
         if ($id <= 0) {
             throw new InvalidArgumentException('News ID must be positive');
         }
     }
 
-    private function validateDate(string $date): void
-    {
+    private function validateDate(string $date): void {
         if (trim($date) === '') {
             throw new InvalidArgumentException('Date cannot be empty');
         }
     }
 
-    private function validateString(string $value, string $fieldName): void
-    {
+    private function validateString(string $value, string $fieldName): void {
         if (trim($value) === '') {
             throw new InvalidArgumentException($fieldName . ' cannot be empty');
         }

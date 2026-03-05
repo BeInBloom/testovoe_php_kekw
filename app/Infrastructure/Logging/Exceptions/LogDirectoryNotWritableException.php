@@ -6,6 +6,4 @@ namespace App\Infrastructure\Logging\Exceptions;
 
 use RuntimeException;
 
-final class LogDirectoryNotWritableException extends RuntimeException
-{
-}
+final class LogDirectoryNotWritableException extends RuntimeException {}

@@ -6,8 +6,7 @@ namespace App\Application\DTOs;
 
 use InvalidArgumentException;
 
-final readonly class NewsListDTO
-{
+final readonly class NewsListDTO {
     public int $currentPage;
     public int $totalPages;
     public bool $hasNextPage;
@@ -27,9 +26,9 @@ final readonly class NewsListDTO
         $this->validateNewsArray($news);
 
         $this->currentPage = $currentPage;
-        $this->totalPages = $totalPages;
+        $this->totalPages  = $totalPages;
         $this->hasNextPage = $hasNextPage;
-        $this->news = $news;
+        $this->news        = $news;
     }
 
     /**
@@ -47,8 +46,7 @@ final readonly class NewsListDTO
      *     }>
      * } $data
      */
-    public static function fromArray(array $data): self
-    {
+    public static function fromArray(array $data): self {
         $news = array_map(
             fn ($item) => NewsDetailDTO::fromArray($item),
             $data['news']
@@ -77,21 +75,19 @@ final readonly class NewsListDTO
      *     }>
      * }
      */
-    public function toArray(): array
-    {
+    public function toArray(): array {
         return [
             'currentPage' => $this->currentPage,
-            'totalPages' => $this->totalPages,
+            'totalPages'  => $this->totalPages,
             'hasNextPage' => $this->hasNextPage,
-            'news' => array_map(
+            'news'        => array_map(
                 fn ($item) => $item->toArray(),
                 $this->news
             ),
         ];
     }
 
-    private function validatePageNumbers(int $currentPage, int $totalPages): void
-    {
+    private function validatePageNumbers(int $currentPage, int $totalPages): void {
         if ($currentPage <= 0) {
             throw new InvalidArgumentException('Current page must be positive');
         }
@@ -104,8 +100,7 @@ final readonly class NewsListDTO
     /**
      * @param array<int, NewsDetailDTO> $news
      */
-    private function validateNewsArray(array $news): void
-    {
+    private function validateNewsArray(array $news): void {
         foreach ($news as $index => $item) {
             if (!$item instanceof NewsDetailDTO) {
                 throw new InvalidArgumentException(

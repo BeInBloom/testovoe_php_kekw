@@ -10,12 +10,10 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 
-final class FileLogger implements LoggerInterface
-{
+final class FileLogger implements LoggerInterface {
     private Logger $logger;
 
-    public function __construct(string $logFile)
-    {
+    public function __construct(string $logFile) {
         $logDir = dirname($logFile);
         $this->ensureLogDirectoryExists($logDir);
 
@@ -26,29 +24,25 @@ final class FileLogger implements LoggerInterface
     /**
      * @param array<string, mixed> $context
      */
-    public function info(string $message, array $context = []): void
-    {
+    public function info(string $message, array $context = []): void {
         $this->logger->info($message, $context);
     }
 
     /**
      * @param array<string, mixed> $context
      */
-    public function error(string $message, array $context = []): void
-    {
+    public function error(string $message, array $context = []): void {
         $this->logger->error($message, $context);
     }
 
     /**
      * @param array<string, mixed> $context
      */
-    public function warning(string $message, array $context = []): void
-    {
+    public function warning(string $message, array $context = []): void {
         $this->logger->warning($message, $context);
     }
 
-    private function ensureLogDirectoryExists(string $logDir): void
-    {
+    private function ensureLogDirectoryExists(string $logDir): void {
         if (!is_dir($logDir)) {
             if (!@mkdir($logDir, 0755, true)) {
                 throw new LogDirectoryNotWritableException(

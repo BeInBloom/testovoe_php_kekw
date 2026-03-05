@@ -8,17 +8,14 @@ use DateTime;
 use DateTimeImmutable;
 use InvalidArgumentException;
 
-final readonly class NewsDate
-{
+final readonly class NewsDate {
     public DateTimeImmutable $value;
 
-    public function __construct(DateTimeImmutable $value)
-    {
+    public function __construct(DateTimeImmutable $value) {
         $this->value = $value;
     }
 
-    public static function fromString(string $dateString): self
-    {
+    public static function fromString(string $dateString): self {
         $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateString);
 
         if ($date === false) {
@@ -28,18 +25,15 @@ final readonly class NewsDate
         return new self($date);
     }
 
-    public static function fromDateTime(DateTime $date): self
-    {
+    public static function fromDateTime(DateTime $date): self {
         return new self(DateTimeImmutable::createFromMutable($date));
     }
 
-    public function getValue(): DateTimeImmutable
-    {
+    public function getValue(): DateTimeImmutable {
         return $this->value;
     }
 
-    public function format(string $format = 'Y-m-d H:i:s'): string
-    {
+    public function format(string $format = 'Y-m-d H:i:s'): string {
         return $this->value->format($format);
     }
 }

@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace App\Domain\Contracts;
 
-interface LoggerInterface
-{
+interface LoggerInterface {
     /**
      * @param array<string, mixed> $context
      */
     public function info(string $message, array $context = []): void;
-
     /**
      * @param array<string, mixed> $context
      */
     public function error(string $message, array $context = []): void;
-
     /**
      * @param array<string, mixed> $context
      */

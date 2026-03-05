@@ -8,17 +8,15 @@ use App\Application\DTOs\NewsDetailDTO;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-final class NewsDetailDTOTest extends TestCase
-{
-    public function test_from_array_and_to_array_round_trip(): void
-    {
+final class NewsDetailDTOTest extends TestCase {
+    public function test_from_array_and_to_array_round_trip(): void {
         $data = [
-            'id' => 7,
-            'date' => '2026-03-05 10:00:00',
-            'title' => 'Title',
+            'id'       => 7,
+            'date'     => '2026-03-05 10:00:00',
+            'title'    => 'Title',
             'announce' => 'Announce',
-            'content' => 'Content',
-            'image' => 'image.jpg',
+            'content'  => 'Content',
+            'image'    => 'image.jpg',
         ];
 
         $dto = NewsDetailDTO::fromArray($data);
@@ -26,8 +24,7 @@ final class NewsDetailDTOTest extends TestCase
         self::assertSame($data, $dto->toArray());
     }
 
-    public function test_construct_with_invalid_id_throws_exception(): void
-    {
+    public function test_construct_with_invalid_id_throws_exception(): void {
         $this->expectException(InvalidArgumentException::class);
 
         new NewsDetailDTO(
@@ -40,8 +37,7 @@ final class NewsDetailDTOTest extends TestCase
         );
     }
 
-    public function test_construct_with_empty_title_throws_exception(): void
-    {
+    public function test_construct_with_empty_title_throws_exception(): void {
         $this->expectException(InvalidArgumentException::class);
 
         new NewsDetailDTO(

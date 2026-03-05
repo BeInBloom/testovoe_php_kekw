@@ -6,15 +6,12 @@ namespace App\Application\Services;
 
 use App\Domain\Contracts\PaginationInterface;
 
-final readonly class PaginationService implements PaginationInterface
-{
-    public function getCurrentPage(int $defaultPage = 1): int
-    {
+final readonly class PaginationService implements PaginationInterface {
+    public function getCurrentPage(int $defaultPage = 1): int {
         return $defaultPage;
     }
 
-    public function getTotalPages(int $total, int $perPage): int
-    {
+    public function getTotalPages(int $total, int $perPage): int {
         if ($perPage <= 0) {
             throw new \InvalidArgumentException('Items per page must be positive');
         }
@@ -22,8 +19,7 @@ final readonly class PaginationService implements PaginationInterface
         return (int) ceil($total / $perPage);
     }
 
-    public function hasNextPage(int $currentPage, int $total, int $perPage): bool
-    {
+    public function hasNextPage(int $currentPage, int $total, int $perPage): bool {
         if ($perPage <= 0) {
             throw new \InvalidArgumentException('Items per page must be positive');
         }

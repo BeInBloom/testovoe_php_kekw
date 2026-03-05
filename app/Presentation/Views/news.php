@@ -4,7 +4,7 @@
 use App\Presentation\Security\OutputSanitizer;
 
 $imageName = OutputSanitizer::sanitizeImageName($news->image);
-$title = $news->title;
+$title     = $news->title;
 ?>
 
 <?php include __DIR__ . '/layouts/header.php'; ?>

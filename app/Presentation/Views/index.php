@@ -5,10 +5,10 @@
 use App\Presentation\Security\OutputSanitizer;
 
 $latestImage = OutputSanitizer::sanitizeImageName($latest->image);
-$title = 'Галактический вестник';
-$windowSize = 3;
+$title       = 'Галактический вестник';
+$windowSize  = 3;
 $windowStart = max(1, min($list->currentPage - 1, $list->totalPages - $windowSize + 1));
-$windowEnd = min($list->totalPages, $windowStart + $windowSize - 1);
+$windowEnd   = min($list->totalPages, $windowStart + $windowSize - 1);
 ?>
 
 <?php include __DIR__ . '/layouts/header.php'; ?>

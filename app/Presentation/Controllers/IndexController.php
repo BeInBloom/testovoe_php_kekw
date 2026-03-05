@@ -8,13 +8,11 @@ use App\Application\Contracts\NewsServiceInterface;
 use App\Domain\Contracts\LoggerInterface;
 use Throwable;
 
-final readonly class IndexController
-{
+final readonly class IndexController {
     public function __construct(
         private NewsServiceInterface $newsService,
-        private LoggerInterface $logger
-    ) {
-    }
+        private LoggerInterface $logger,
+    ) {}
 
     /**
      * @return array{
@@ -22,21 +20,20 @@ final readonly class IndexController
      *     list: \App\Application\DTOs\NewsListDTO
      * }
      */
-    public function __invoke(int $page = 1): array
-    {
+    public function __invoke(int $page = 1): array {
         try {
             $this->logger->info('Controller: Index page', ['page' => $page]);
 
             $latestNews = $this->newsService->getLatestNews();
-            $newsList = $this->newsService->getNewsList($page);
+            $newsList   = $this->newsService->getNewsList($page);
 
             return [
                 'latest' => $latestNews,
-                'list' => $newsList,
+                'list'   => $newsList,
             ];
         } catch (Throwable $e) {
             $this->logger->error('Error in index controller', [
-                'page' => $page,
+                'page'  => $page,
                 'error' => $e->getMessage(),
             ]);
 
