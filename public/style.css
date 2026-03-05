@@ -332,6 +332,20 @@ a {
     width: 100%;
 }
 
+.not-found {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    min-height: clamp(16rem, 56vh, 28rem);
+    text-align: center;
+}
+
+.not-found-title {
+    font-size: clamp(1.6rem, 3.8vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
 .site-footer {
     border-top: 1px solid var(--border);
     margin-top: 0;
