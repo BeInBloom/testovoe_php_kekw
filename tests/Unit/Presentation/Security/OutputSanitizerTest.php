@@ -58,4 +58,18 @@ final class OutputSanitizerTest extends TestCase
 
         $this->assertSame('Text more text', $plain);
     }
+
+    public function test_format_date_returns_day_month_year(): void
+    {
+        $formatted = OutputSanitizer::formatDate('2412-05-26 00:00:00');
+
+        $this->assertSame('26.05.2412', $formatted);
+    }
+
+    public function test_format_date_falls_back_to_plain_text_for_invalid_value(): void
+    {
+        $formatted = OutputSanitizer::formatDate('<b>invalid</b>');
+
+        $this->assertSame('invalid', $formatted);
+    }
 }

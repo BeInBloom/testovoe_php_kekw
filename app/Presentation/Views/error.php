@@ -10,7 +10,9 @@ $title = 'Ошибка';
     <article class="detail-content">
         <h1 class="detail-title">Ошибка запроса</h1>
         <p class="detail-lead"><?= App\Presentation\Security\OutputSanitizer::escape($errorMessage) ?></p>
-        <a href="/" class="outline-btn">← назад к новостям</a>
+        <div class="detail-actions">
+            <a href="/" class="outline-btn">← назад к новостям</a>
+        </div>
     </article>
 </section>
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Presentation\Security;
 
+use DateTimeImmutable;
+
 final class OutputSanitizer
 {
     private const int HTML_ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;
@@ -48,5 +50,16 @@ final class OutputSanitizer
         $singleSpaced = preg_replace('/\s+/u', ' ', $withoutTags);
 
         return trim($singleSpaced ?? '');
+    }
+
+    public static function formatDate(string $value): string
+    {
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value);
+
+        if ($date === false) {
+            return self::plainText($value);
+        }
+
+        return $date->format('d.m.Y');
     }
 }
