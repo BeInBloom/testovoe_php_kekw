@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Presentation\Security;
+
+final class OutputSanitizer
+{
+    private const int HTML_ESCAPE_FLAGS = ENT_QUOTES | ENT_SUBSTITUTE;
+    private const string HTML_ENCODING = 'UTF-8';
+
+    public static function escape(string $value): string
+    {
+        return htmlspecialchars($value, self::HTML_ESCAPE_FLAGS, self::HTML_ENCODING);
+    }
+
+    public static function sanitizeRichText(string $value): string
+    {
+        $sanitized = strip_tags($value, '<p><br>');
+
+        $withoutParagraphAttributes = preg_replace('/<p\b[^>]*>/i', '<p>', $sanitized);
+        if (!is_string($withoutParagraphAttributes)) {
+            return '';
+        }
+
+        $withoutBreakAttributes = preg_replace('/<br\b[^>]*\/?>/i', '<br>', $withoutParagraphAttributes);
+        if (!is_string($withoutBreakAttributes)) {
+            return '';
+        }
+
+        return $withoutBreakAttributes;
+    }
+
+    public static function sanitizeImageName(string $imageName): string
+    {
+        $imageName = basename($imageName);
+
+        if ($imageName === '' || preg_match('/^[a-zA-Z0-9._-]+$/', $imageName) !== 1) {
+            return '';
+        }
+
+        return $imageName;
+    }
+}

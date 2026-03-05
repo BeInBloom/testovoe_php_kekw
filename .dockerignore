@@ -1,0 +1,14 @@
+.git
+.github
+.idea
+.vscode
+vendor
+tests
+task
+storage/logs
+.env
+.env.*
+phpunit.xml
+phpstan.neon
+php-cs-fixer.php
+README.md

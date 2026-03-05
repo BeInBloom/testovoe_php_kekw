@@ -1,0 +1,8 @@
+parameters:
+    level: 9
+    paths:
+        - app
+    checkMissingIterableValueType: true
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#PHPDoc tag @#'

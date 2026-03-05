@@ -1,0 +1,16 @@
+pre-commit:
+  parallel: true
+  commands:
+    cs-fix:
+      run: composer cs-fix
+      glob: "*.php"
+
+    analyse:
+      run: composer analyse
+      glob: "*.php"
+
+pre-push:
+  parallel: true
+  commands:
+    test:
+      run: composer test

@@ -1,0 +1,12 @@
+/vendor/
+/node_modules/
+/storage/logs/*
+.env
+.phpunit.cache/
+.php_cs.cache
+.php-cs-fixer.cache
+.DS_Store
+.idea/
+.vscode/
+*.log
+task/
