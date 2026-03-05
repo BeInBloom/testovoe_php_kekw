@@ -7,7 +7,15 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header>
-        <h1>News Site</h1>
+    <header class="site-header">
+        <div class="container site-header-inner">
+            <a href="/" class="brand" aria-label="На главную">
+                <span class="brand-mark" aria-hidden="true"></span>
+                <span class="brand-text">
+                    <span>ГАЛАКТИЧЕСКИЙ</span>
+                    <span>ВЕСТНИК</span>
+                </span>
+            </a>
+        </div>
     </header>
-    <main>
+    <main class="site-main">

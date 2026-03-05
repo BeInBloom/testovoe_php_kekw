@@ -41,4 +41,12 @@ final class OutputSanitizer
 
         return $imageName;
     }
+
+    public static function plainText(string $value): string
+    {
+        $withoutTags = strip_tags($value);
+        $singleSpaced = preg_replace('/\s+/u', ' ', $withoutTags);
+
+        return trim($singleSpaced ?? '');
+    }
 }

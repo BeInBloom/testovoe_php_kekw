@@ -49,4 +49,13 @@ final class OutputSanitizerTest extends TestCase
 
         $this->assertSame('', $unsafeName);
     }
+
+    public function test_plain_text_removes_tags_and_normalizes_spaces(): void
+    {
+        $value = "<p>Text</p>\n\t<span> more   text</span>";
+
+        $plain = OutputSanitizer::plainText($value);
+
+        $this->assertSame('Text more text', $plain);
+    }
 }

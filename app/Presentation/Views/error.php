@@ -1,16 +1,17 @@
 <?php
 /** @var string $errorMessage */
 
-$title = 'Error';
+$title = 'Ошибка';
 ?>
 
 <?php include __DIR__ . '/layouts/header.php'; ?>
 
-<article class="news-detail">
-    <h1>Request Error</h1>
-    <p><?= App\Presentation\Security\OutputSanitizer::escape($errorMessage) ?></p>
-</article>
-
-<a href="/" class="btn">Back to news</a>
+<section class="container detail-page">
+    <article class="detail-content">
+        <h1 class="detail-title">Ошибка запроса</h1>
+        <p class="detail-lead"><?= App\Presentation\Security\OutputSanitizer::escape($errorMessage) ?></p>
+        <a href="/" class="outline-btn">← назад к новостям</a>
+    </article>
+</section>
 
 <?php include __DIR__ . '/layouts/footer.php'; ?>
