@@ -20,12 +20,12 @@ $title = $news->title;
 
     <article class="detail-content">
         <span class="date-pill"><?= OutputSanitizer::escape(OutputSanitizer::formatDate($news->date)) ?></span>
-        <p class="detail-lead"><?= OutputSanitizer::escape(OutputSanitizer::plainText($news->announce)) ?></p>
         <?php if ($imageName !== ''): ?>
             <div class="detail-image-float">
                 <img src="/images/<?= OutputSanitizer::escape($imageName) ?>" alt="<?= OutputSanitizer::escape($news->title) ?>" class="news-image">
             </div>
         <?php endif; ?>
+        <p class="detail-lead"><?= OutputSanitizer::escape(OutputSanitizer::plainText($news->announce)) ?></p>
 
         <div class="news-content">
             <?= OutputSanitizer::sanitizeRichText($news->content) ?>

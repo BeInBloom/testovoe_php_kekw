@@ -270,6 +270,12 @@ a {
     max-width: none;
 }
 
+.detail-content::after {
+    clear: both;
+    content: '';
+    display: block;
+}
+
 .detail-lead {
     color: var(--accent);
     font-size: clamp(24px, 2.5vw, 42px);
@@ -291,7 +297,7 @@ a {
 
 .detail-image-float {
     float: right;
-    margin: 8px 0 18px 40px;
+    margin: 6px 0 18px 40px;
     max-width: 48%;
     width: 560px;
 }
@@ -340,6 +346,9 @@ a {
         column-gap: 32px;
     }
 
+}
+
+@media (max-width: 920px) {
     .detail-image-float {
         float: none;
         margin: 12px 0 20px;
