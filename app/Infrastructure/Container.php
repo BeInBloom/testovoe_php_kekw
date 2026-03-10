@@ -19,6 +19,7 @@ use RuntimeException;
 
 final class Container {
     private const string DEFAULT_DOCKER_LOG_PATH = '/var/log/app/app.log';
+    private const string TEMPORARY_LOG_PATH      = '/tmp/news-site/app.log';
 
     /** @var array<string, mixed> */
     private array $instances = [];
@@ -120,6 +121,13 @@ final class Container {
             && $this->canUseLogPath(self::DEFAULT_DOCKER_LOG_PATH)
         ) {
             return self::DEFAULT_DOCKER_LOG_PATH;
+        }
+
+        if (
+            $configuredPath !== self::TEMPORARY_LOG_PATH
+            && $this->canUseLogPath(self::TEMPORARY_LOG_PATH)
+        ) {
+            return self::TEMPORARY_LOG_PATH;
         }
 
         return $configuredPath;
