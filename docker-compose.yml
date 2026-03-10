@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+    environment:
+      LOG_PATH: /var/log/app/app.log
     volumes:
       - .:/var/www/html
       - ./storage/logs:/var/log/app

@@ -30,6 +30,14 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
+Если проект запускается на VPS через bind mount, заранее подготовь каталог логов на хосте:
+
+```bash
+mkdir -p storage/logs
+chown -R 33:33 storage/logs
+chmod -R 775 storage/logs
+```
+
 3. Открыть сайт:
 
 - главная: `http://127.0.0.1/`

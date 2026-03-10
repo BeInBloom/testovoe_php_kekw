@@ -28,7 +28,7 @@ final class Container {
     private function create(string $id): mixed {
         return match ($id) {
             LoggerInterface::class => new FileLogger(
-                $this->env('LOG_PATH', __DIR__ . '/../../storage/logs/app.log')
+                $this->env('LOG_PATH', '/var/log/app/app.log')
             ),
             Connection::class => new Connection(
                 $this->env('DB_HOST', 'mysql'),
