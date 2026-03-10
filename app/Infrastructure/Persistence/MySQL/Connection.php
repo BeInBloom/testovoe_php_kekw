@@ -41,7 +41,7 @@ final readonly class Connection {
                 'database' => $database,
             ]);
 
-            throw new PDOException('Database connection failed: ' . $e->getMessage());
+            throw new PDOException('Database connection failed.', previous: $e);
         }
     }
 

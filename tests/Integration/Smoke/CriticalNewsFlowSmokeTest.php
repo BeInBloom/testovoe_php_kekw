@@ -97,10 +97,6 @@ final class SmokeNewsRepository implements NewsRepositoryInterface {
  * @internal
  */
 final class SmokePagination implements PaginationInterface {
-    public function getCurrentPage(): int {
-        return 1;
-    }
-
     public function getTotalPages(int $total, int $perPage): int {
         return (int) ceil($total / $perPage);
     }

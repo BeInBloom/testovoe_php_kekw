@@ -1,83 +1,57 @@
 # News Site
 
-PHP MVC новостной сайт с использованием SOLID принципов, Docker, CI/CD и полным тестированием.
+Мини-сайт на PHP / MySQL / HTML / CSS без фреймворков и CMS.
+
+Что реализовано:
+
+- список новостей с сортировкой по `date DESC`
+- детальная страница новости
+- пагинация по 4 новости на страницу
+- hero-блок с последней новостью из всей базы
+- безопасная обработка `page` / `id`, экранирование вывода и корректные 400/404
 
 ## Требования
 
-- Docker & Docker Compose
-- PHP 8.3
+- Docker + Docker Compose
+- PHP 8.3+ для локального запуска вне Docker
 - Composer
 
-## Установка
+## Запуск
 
-1. Клонировать репозиторий
-2. Скопировать `.env.example` в `.env`
-3. Запустить Docker контейнеры:
+1. Скопировать переменные окружения:
 
 ```bash
-docker compose up -d
+cp .env.example .env
 ```
 
-## Структура проекта
+2. Поднять контейнеры:
 
-```
-php/
-├── app/
-│   ├── Domain/              # Сущности и Value Objects
-│   ├── Application/         # Сервисы и DTOs
-│   ├── Infrastructure/      # Репозитории и логирование
-│   └── Presentation/         # Контроллеры и Views
-├── public/                  # Публичные файлы
-├── tests/                   # Тесты
-├── docker/                  # Docker конфигурация
-└── config/                  # Конфиги
+```bash
+docker compose up -d --build
 ```
 
-## Команды
+3. Открыть сайт:
 
-### Запуск тестов
+- главная: `http://127.0.0.1/`
+- список, страница 2: `http://127.0.0.1/?page=2`
+- детальная страница новости `id=3`: `http://127.0.0.1/news.php?id=3`
+- health-check: `http://127.0.0.1/health`
+
+Примечание: MySQL seed из [`database/news.sql`](/home/needmoredoggos/code/testovoe/php/database/news.sql) импортируется автоматически при первом старте контейнера `mysql`.
+
+## Проверка качества
+
 ```bash
 composer test
-composer test:coverage
-```
-
-### Статический анализ
-```bash
 composer analyse
+composer cs-check
 ```
 
-### Линтинг
-```bash
-composer cs-fix      # Автоисправление
-composer cs-check    # Проверка
-```
+## Структура
 
-### Coverage в Docker
-Если локально не включен `xdebug`/`pcov`, запустите coverage внутри контейнера:
-
-```bash
-docker compose run --rm -e XDEBUG_MODE=coverage php composer test:coverage
-```
-
-## Smoke endpoint
-
-- `GET /health` возвращает JSON-статус приложения:
-
-```json
-{"status":"ok","timestamp":"..."}
-```
-
-## Git Hooks
-
-Lefthook хуки автоматически запускают:
-- **pre-commit**: CS Fixer + PHPStan
-- **pre-push**: PHPUnit
-
-## CI/CD
-
-GitHub Actions автоматически:
-- Устанавливает зависимости
-- Запускает PHP CS Fixer
-- Запускает PHPStan
-- Запускает PHPUnit
-- Деплоит на production (main ветка)
+- [`app/Application`](/home/needmoredoggos/code/testovoe/php/app/Application) — DTO и прикладные сервисы
+- [`app/Domain`](/home/needmoredoggos/code/testovoe/php/app/Domain) — сущности, value objects, контракты и доменные исключения
+- [`app/Infrastructure`](/home/needmoredoggos/code/testovoe/php/app/Infrastructure) — контейнер, логирование, PDO/MySQL
+- [`app/Presentation`](/home/needmoredoggos/code/testovoe/php/app/Presentation) — controllers, HTTP helpers и views
+- [`public`](/home/needmoredoggos/code/testovoe/php/public) — публичные entrypoint-файлы, CSS и изображения
+- [`tests`](/home/needmoredoggos/code/testovoe/php/tests) — unit и smoke tests

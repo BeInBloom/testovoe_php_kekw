@@ -42,42 +42,18 @@ final class NewsTest extends TestCase {
         );
     }
 
-    public function test_create_news_with_empty_announce_throws_exception(): void {
-        $this->expectException(InvalidArgumentException::class);
-
-        new News(
+    public function test_create_news_allows_empty_optional_fields(): void {
+        $news = new News(
             new NewsId(1),
             NewsDate::fromString('2026-03-05 12:00:00'),
             'Title',
-            ' ',
-            'Content',
-            'image.jpg'
+            '',
+            '',
+            ''
         );
-    }
 
-    public function test_create_news_with_empty_content_throws_exception(): void {
-        $this->expectException(InvalidArgumentException::class);
-
-        new News(
-            new NewsId(1),
-            NewsDate::fromString('2026-03-05 12:00:00'),
-            'Title',
-            'Announce',
-            ' ',
-            'image.jpg'
-        );
-    }
-
-    public function test_create_news_with_empty_image_throws_exception(): void {
-        $this->expectException(InvalidArgumentException::class);
-
-        new News(
-            new NewsId(1),
-            NewsDate::fromString('2026-03-05 12:00:00'),
-            'Title',
-            'Announce',
-            'Content',
-            ' '
-        );
+        self::assertSame('', $news->getAnnounce());
+        self::assertSame('', $news->getContent());
+        self::assertSame('', $news->getImage());
     }
 }

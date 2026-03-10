@@ -14,6 +14,8 @@ use InvalidArgumentException;
 use PDO;
 
 final class NewsRepository implements NewsRepositoryInterface {
+    private const string SELECT_COLUMNS = 'id, date, title, announce, content, image';
+
     public function __construct(
         private Connection $connection,
         private LoggerInterface $logger
@@ -22,7 +24,7 @@ final class NewsRepository implements NewsRepositoryInterface {
     public function getById(NewsId $id): News {
         $this->logger->info('Fetching news by ID', ['id' => $id->getValue()]);
 
-        $sql = 'SELECT * FROM news WHERE id = :id';
+        $sql = 'SELECT ' . self::SELECT_COLUMNS . ' FROM news WHERE id = :id';
 
         $stmt = $this->connection->getPDO()->prepare($sql);
         $stmt->execute(['id' => $id->getValue()]);
@@ -42,7 +44,7 @@ final class NewsRepository implements NewsRepositoryInterface {
     public function getLatest(): News {
         $this->logger->info('Fetching latest news');
 
-        $sql = 'SELECT * FROM news ORDER BY date DESC LIMIT 1';
+        $sql = 'SELECT ' . self::SELECT_COLUMNS . ' FROM news ORDER BY date DESC, id DESC LIMIT 1';
 
         $stmt = $this->connection->getPDO()->prepare($sql);
         $stmt->execute();
@@ -65,9 +67,15 @@ final class NewsRepository implements NewsRepositoryInterface {
     public function getPaginated(int $page, int $perPage): array {
         $this->logger->info('Fetching paginated news', ['page' => $page, 'perPage' => $perPage]);
 
+        if ($page <= 0 || $perPage <= 0) {
+            throw new InvalidArgumentException('Page and per-page values must be positive integers');
+        }
+
         $offset = ($page - 1) * $perPage;
 
-        $sql = 'SELECT * FROM news ORDER BY date DESC LIMIT :limit OFFSET :offset';
+        $sql = 'SELECT '
+            . self::SELECT_COLUMNS
+            . ' FROM news ORDER BY date DESC, id DESC LIMIT :limit OFFSET :offset';
 
         $stmt = $this->connection->getPDO()->prepare($sql);
         $stmt->bindValue('limit', $perPage, PDO::PARAM_INT);
@@ -126,9 +134,9 @@ final class NewsRepository implements NewsRepositoryInterface {
         $id       = (int) $row['id'];
         $date     = (string) $row['date'];
         $title    = (string) $row['title'];
-        $announce = (string) $row['announce'];
-        $content  = (string) $row['content'];
-        $image    = (string) $row['image'];
+        $announce = is_string($row['announce']) ? $row['announce'] : '';
+        $content  = is_string($row['content']) ? $row['content'] : '';
+        $image    = is_string($row['image']) ? $row['image'] : '';
 
         return new News(
             new NewsId($id),
@@ -146,9 +154,9 @@ final class NewsRepository implements NewsRepositoryInterface {
      *     id: int|numeric-string,
      *     date: string,
      *     title: string,
-     *     announce: string,
-     *     content: string,
-     *     image: string
+     *     announce: string|null,
+     *     content: string|null,
+     *     image: string|null
      * } $row
      */
     private function validateRow(array $row): void {
@@ -164,9 +172,15 @@ final class NewsRepository implements NewsRepositoryInterface {
             throw new InvalidArgumentException('Invalid news row: id must be numeric');
         }
 
-        foreach (['date', 'title', 'announce', 'content', 'image'] as $key) {
+        foreach (['date', 'title'] as $key) {
             if (!is_string($row[$key])) {
                 throw new InvalidArgumentException("Invalid news row: {$key} must be string");
+            }
+        }
+
+        foreach (['announce', 'content', 'image'] as $key) {
+            if ($row[$key] !== null && !is_string($row[$key])) {
+                throw new InvalidArgumentException("Invalid news row: {$key} must be string or null");
             }
         }
     }

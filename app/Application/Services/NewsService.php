@@ -11,6 +11,8 @@ use App\Domain\Contracts\LoggerInterface;
 use App\Domain\Contracts\NewsRepositoryInterface;
 use App\Domain\Contracts\PaginationInterface;
 use App\Domain\Entities\News;
+use App\Domain\Exceptions\NewsNotFoundException;
+use App\Domain\Exceptions\PageOutOfRangeException;
 use App\Domain\ValueObjects\NewsId;
 use InvalidArgumentException;
 
@@ -23,10 +25,16 @@ final class NewsService implements NewsServiceInterface {
         private LoggerInterface $logger
     ) {}
 
-    public function getLatestNews(): NewsDetailDTO {
+    public function getLatestNews(): ?NewsDetailDTO {
         $this->logger->info('Fetching latest news in service');
 
-        $news = $this->newsRepository->getLatest();
+        try {
+            $news = $this->newsRepository->getLatest();
+        } catch (NewsNotFoundException) {
+            $this->logger->warning('Latest news requested for empty database');
+
+            return null;
+        }
 
         return $this->mapEntityToDTO($news);
     }
@@ -36,8 +44,28 @@ final class NewsService implements NewsServiceInterface {
 
         $this->logger->info('Fetching news list in service', ['page' => $page]);
 
-        $total       = $this->newsRepository->getTotalCount();
-        $totalPages  = $this->pagination->getTotalPages($total, self::NEWS_PER_PAGE);
+        $total      = $this->newsRepository->getTotalCount();
+        $totalPages = $this->pagination->getTotalPages($total, self::NEWS_PER_PAGE);
+
+        if ($totalPages === 0) {
+            if ($page !== 1) {
+                throw PageOutOfRangeException::forEmptyCollection($page);
+            }
+
+            $this->logger->info('News list requested for empty database');
+
+            return new NewsListDTO(1, 0, false, []);
+        }
+
+        if ($page > $totalPages) {
+            $this->logger->warning('Requested page exceeds total pages', [
+                'page'       => $page,
+                'totalPages' => $totalPages,
+            ]);
+
+            throw PageOutOfRangeException::fromPage($page, $totalPages);
+        }
+
         $news        = $this->newsRepository->getPaginated($page, self::NEWS_PER_PAGE);
         $hasNextPage = $this->pagination->hasNextPage($page, $total, self::NEWS_PER_PAGE);
 

@@ -59,4 +59,12 @@ final class NewsListDTOTest extends TestCase {
         self::assertCount(1, $dto->news);
         self::assertSame($item, $dto->news[0]);
     }
+
+    public function test_construct_accepts_empty_collection_on_first_page(): void {
+        $dto = new NewsListDTO(1, 0, false, []);
+
+        self::assertSame(1, $dto->currentPage);
+        self::assertSame(0, $dto->totalPages);
+        self::assertFalse($dto->hasNextPage);
+    }
 }

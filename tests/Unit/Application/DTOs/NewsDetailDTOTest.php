@@ -49,4 +49,19 @@ final class NewsDetailDTOTest extends TestCase {
             'image.jpg'
         );
     }
+
+    public function test_construct_accepts_empty_optional_fields(): void {
+        $dto = new NewsDetailDTO(
+            1,
+            '2026-03-05 10:00:00',
+            'Title',
+            '',
+            '',
+            ''
+        );
+
+        self::assertSame('', $dto->announce);
+        self::assertSame('', $dto->content);
+        self::assertSame('', $dto->image);
+    }
 }

@@ -16,7 +16,7 @@ final readonly class IndexController {
 
     /**
      * @return array{
-     *     latest: \App\Application\DTOs\NewsDetailDTO,
+     *     latest: \App\Application\DTOs\NewsDetailDTO|null,
      *     list: \App\Application\DTOs\NewsListDTO
      * }
      */

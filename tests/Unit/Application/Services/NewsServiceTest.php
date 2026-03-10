@@ -10,6 +10,7 @@ use App\Domain\Contracts\NewsRepositoryInterface;
 use App\Domain\Contracts\PaginationInterface;
 use App\Domain\Entities\News;
 use App\Domain\Exceptions\NewsNotFoundException;
+use App\Domain\Exceptions\PageOutOfRangeException;
 use App\Domain\ValueObjects\NewsDate;
 use App\Domain\ValueObjects\NewsId;
 use InvalidArgumentException;
@@ -24,6 +25,12 @@ final class NewsServiceTest extends TestCase {
 
         self::assertSame(1, $latest->id);
         self::assertSame('Latest', $latest->title);
+    }
+
+    public function test_get_latest_news_returns_null_for_empty_repository(): void {
+        $service = new NewsService(new InMemoryNewsRepository([]), new FakePagination(), new InMemoryLogger());
+
+        self::assertNull($service->getLatestNews());
     }
 
     public function test_get_news_list_returns_paginated_result(): void {
@@ -52,6 +59,26 @@ final class NewsServiceTest extends TestCase {
         $this->expectException(InvalidArgumentException::class);
 
         $service->getNewsList(0);
+    }
+
+    public function test_get_news_list_throws_for_page_beyond_last_page(): void {
+        $repository = new InMemoryNewsRepository([$this->createNews(1, 'Only')]);
+        $service    = new NewsService($repository, new FakePagination(), new InMemoryLogger());
+
+        $this->expectException(PageOutOfRangeException::class);
+
+        $service->getNewsList(2);
+    }
+
+    public function test_get_news_list_returns_empty_state_for_empty_repository(): void {
+        $service = new NewsService(new InMemoryNewsRepository([]), new FakePagination(), new InMemoryLogger());
+
+        $list = $service->getNewsList(1);
+
+        self::assertSame(1, $list->currentPage);
+        self::assertSame(0, $list->totalPages);
+        self::assertFalse($list->hasNextPage);
+        self::assertSame([], $list->news);
     }
 
     public function test_get_news_detail_returns_requested_news(): void {
@@ -129,10 +156,6 @@ final class InMemoryNewsRepository implements NewsRepositoryInterface {
  * @internal
  */
 final class FakePagination implements PaginationInterface {
-    public function getCurrentPage(): int {
-        return 1;
-    }
-
     public function getTotalPages(int $total, int $perPage): int {
         return (int) ceil($total / $perPage);
     }

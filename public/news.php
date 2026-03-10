@@ -8,25 +8,23 @@ use App\Domain\Contracts\LoggerInterface;
 use App\Infrastructure\Container;
 use App\Presentation\Controllers\NewsController;
 use App\Presentation\Http\HttpErrorMapper;
-use Dotenv\Dotenv;
-
-$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->safeLoad();
+use App\Presentation\Http\QueryIntReader;
 
 $errorMapper = new HttpErrorMapper();
 $logger = null;
 
 try {
-    $container = new Container();
+    $container = require __DIR__ . '/../app/bootstrap.php';
+
+    if (!$container instanceof Container) {
+        throw new \RuntimeException('Application bootstrap did not return a container instance.');
+    }
+
     $logger = $container->get(LoggerInterface::class);
 
     $controller = $container->get(NewsController::class);
 
-    $id = (int) ($_GET['id'] ?? 0);
-
-    if ($id <= 0) {
-        throw new InvalidArgumentException('News ID must be positive');
-    }
+    $id = QueryIntReader::positiveInt($_GET, 'id');
 
     $news = $controller->detail($id);
 
@@ -52,6 +50,7 @@ try {
 
     http_response_code($error->statusCode);
 
+    $statusCode   = $error->statusCode;
     $errorMessage = $error->clientMessage;
 
     require __DIR__ . '/../app/Presentation/Views/error.php';

@@ -7,28 +7,18 @@ namespace App\Application\DTOs;
 use InvalidArgumentException;
 
 final readonly class NewsListDTO {
-    public int $currentPage;
-    public int $totalPages;
-    public bool $hasNextPage;
-    /** @var array<int, NewsDetailDTO> */
-    public array $news;
-
     /**
      * @param array<int, NewsDetailDTO> $news
      */
     public function __construct(
-        int $currentPage,
-        int $totalPages,
-        bool $hasNextPage,
-        array $news
+        public int $currentPage,
+        public int $totalPages,
+        public bool $hasNextPage,
+        public array $news
     ) {
         $this->validatePageNumbers($currentPage, $totalPages);
         $this->validateNewsArray($news);
-
-        $this->currentPage = $currentPage;
-        $this->totalPages  = $totalPages;
-        $this->hasNextPage = $hasNextPage;
-        $this->news        = $news;
+        $this->validateNavigationState($currentPage, $totalPages, $hasNextPage);
     }
 
     /**
@@ -95,6 +85,10 @@ final readonly class NewsListDTO {
         if ($totalPages < 0) {
             throw new InvalidArgumentException('Total pages cannot be negative');
         }
+
+        if ($totalPages > 0 && $currentPage > $totalPages) {
+            throw new InvalidArgumentException('Current page cannot exceed total pages');
+        }
     }
 
     /**
@@ -107,6 +101,20 @@ final readonly class NewsListDTO {
                     'News array must contain only NewsDetailDTO instances at index ' . $index
                 );
             }
+        }
+    }
+
+    private function validateNavigationState(int $currentPage, int $totalPages, bool $hasNextPage): void {
+        if ($totalPages === 0 && $currentPage !== 1) {
+            throw new InvalidArgumentException('Empty pagination must use page 1 as current page');
+        }
+
+        if ($totalPages === 0 && $hasNextPage) {
+            throw new InvalidArgumentException('Empty pagination cannot have a next page');
+        }
+
+        if ($totalPages > 0 && $hasNextPage !== ($currentPage < $totalPages)) {
+            throw new InvalidArgumentException('Next page flag is inconsistent with current page');
         }
     }
 }

@@ -3,8 +3,10 @@
 
 use App\Presentation\Security\OutputSanitizer;
 
-$imageName = OutputSanitizer::sanitizeImageName($news->image);
+$imagePath = OutputSanitizer::resolvePublicImagePath($news->image);
 $title     = $news->title;
+$announce  = OutputSanitizer::plainText($news->announce);
+$content   = OutputSanitizer::sanitizeRichText($news->content);
 ?>
 
 <?php include __DIR__ . '/layouts/header.php'; ?>
@@ -20,15 +22,21 @@ $title     = $news->title;
 
     <article class="detail-content">
         <span class="date-pill"><?= OutputSanitizer::escape(OutputSanitizer::formatDate($news->date)) ?></span>
-        <?php if ($imageName !== ''): ?>
+        <?php if ($imagePath !== null): ?>
             <div class="detail-image-float">
-                <img src="/images/<?= OutputSanitizer::escape($imageName) ?>" alt="<?= OutputSanitizer::escape($news->title) ?>" class="news-image">
+                <img src="<?= OutputSanitizer::escape($imagePath) ?>" alt="<?= OutputSanitizer::escape($news->title) ?>" class="news-image">
             </div>
         <?php endif; ?>
-        <p class="detail-lead"><?= OutputSanitizer::escape(OutputSanitizer::plainText($news->announce)) ?></p>
+        <?php if ($announce !== ''): ?>
+            <p class="detail-lead"><?= OutputSanitizer::escape($announce) ?></p>
+        <?php endif; ?>
 
         <div class="news-content">
-            <?= OutputSanitizer::sanitizeRichText($news->content) ?>
+            <?php if (OutputSanitizer::plainText($content) !== ''): ?>
+                <?= $content ?>
+            <?php else: ?>
+                <p>Полный текст новости пока недоступен.</p>
+            <?php endif; ?>
         </div>
         <div class="detail-actions">
             <a href="/" class="outline-btn">← назад к новостям</a>

@@ -21,7 +21,7 @@ final class OutputSanitizerTest extends TestCase {
 
         $sanitized = OutputSanitizer::sanitizeRichText($value);
 
-        $this->assertSame('<p>Helloalert(2)<br></p>', $sanitized);
+        $this->assertSame('<p>Hello<br></p>', $sanitized);
     }
 
     public function test_sanitize_rich_text_removes_disallowed_tags(): void {
@@ -45,11 +45,23 @@ final class OutputSanitizerTest extends TestCase {
     }
 
     public function test_plain_text_removes_tags_and_normalizes_spaces(): void {
-        $value = "<p>Text</p>\n\t<span> more   text</span>";
+        $value = "<p>Text</p>\n\t<span> more   text</span><script>alert(1)</script>";
 
         $plain = OutputSanitizer::plainText($value);
 
         $this->assertSame('Text more text', $plain);
+    }
+
+    public function test_resolve_public_image_path_returns_existing_public_image(): void {
+        $path = OutputSanitizer::resolvePublicImagePath('954e644b21f5340bd90c930e0173a425.jpg');
+
+        $this->assertSame('/images/954e644b21f5340bd90c930e0173a425.jpg', $path);
+    }
+
+    public function test_resolve_public_image_path_returns_null_for_missing_file(): void {
+        $path = OutputSanitizer::resolvePublicImagePath('missing-image.jpg');
+
+        $this->assertNull($path);
     }
 
     public function test_format_date_returns_day_month_year(): void {

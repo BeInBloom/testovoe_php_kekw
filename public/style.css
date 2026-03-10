@@ -118,6 +118,10 @@ a {
     position: relative;
 }
 
+.hero-no-image {
+    background-image: linear-gradient(135deg, #22334f 0%, #3d265c 100%);
+}
+
 .hero-overlay {
     background: linear-gradient(120deg, rgba(8, 16, 24, 0.68) 0%, rgba(11, 15, 28, 0.3) 64%, rgba(11, 15, 28, 0.12) 100%);
     min-height: var(--hero-height);
@@ -193,6 +197,8 @@ a {
     font-weight: 700;
     letter-spacing: -0.015em;
     line-height: 1.12;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .news-card-title.is-accent,
@@ -204,6 +210,7 @@ a {
     color: var(--text-muted);
     font-size: var(--font-card-text);
     line-height: 1.45;
+    overflow-wrap: anywhere;
 }
 
 .outline-btn {
@@ -260,6 +267,14 @@ a {
     min-width: clamp(2.4rem, 4.2vh, 3rem);
 }
 
+.empty-state {
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    color: var(--text-muted);
+    padding: var(--space-lg);
+}
+
 .detail-page {
     padding-bottom: var(--space-sm);
     padding-top: clamp(1.1rem, 2.8vh, 2rem);
@@ -285,6 +300,7 @@ a {
     letter-spacing: -0.015em;
     line-height: 1.06;
     margin-bottom: var(--space-sm);
+    overflow-wrap: anywhere;
 }
 
 .detail-content {
@@ -303,6 +319,7 @@ a {
     font-weight: 700;
     line-height: 1.2;
     margin: var(--space-xs) 0 var(--space-sm);
+    overflow-wrap: anywhere;
 }
 
 .news-content {
@@ -310,6 +327,7 @@ a {
     font-size: var(--font-body);
     line-height: 1.42;
     margin-bottom: var(--space-sm);
+    overflow-wrap: anywhere;
 }
 
 .news-content p {
@@ -329,6 +347,8 @@ a {
 
 .news-image {
     display: block;
+    height: auto;
+    max-width: 100%;
     width: 100%;
 }
 
@@ -340,10 +360,21 @@ a {
     text-align: center;
 }
 
+.not-found-content {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: center;
+}
+
 .not-found-title {
     font-size: clamp(1.6rem, 3.8vw, 2.5rem);
     font-weight: 700;
     letter-spacing: -0.015em;
+}
+
+.not-found-text {
+    color: var(--text-muted);
+    max-width: 32rem;
 }
 
 .site-footer {

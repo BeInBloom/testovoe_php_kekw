@@ -9,32 +9,15 @@ use App\Domain\ValueObjects\NewsId;
 use InvalidArgumentException;
 
 final readonly class News {
-    public NewsId $id;
-    public NewsDate $date;
-    public string $title;
-    public string $announce;
-    public string $content;
-    public string $image;
-
     public function __construct(
-        NewsId $id,
-        NewsDate $date,
-        string $title,
-        string $announce,
-        string $content,
-        string $image
+        private NewsId $id,
+        private NewsDate $date,
+        private string $title,
+        private string $announce,
+        private string $content,
+        private string $image
     ) {
         $this->validateTitle($title);
-        $this->validateAnnounce($announce);
-        $this->validateContent($content);
-        $this->validateImage($image);
-
-        $this->id       = $id;
-        $this->date     = $date;
-        $this->title    = $title;
-        $this->announce = $announce;
-        $this->content  = $content;
-        $this->image    = $image;
     }
 
     public function getId(): NewsId {
@@ -64,24 +47,6 @@ final readonly class News {
     private function validateTitle(string $title): void {
         if (trim($title) === '') {
             throw new InvalidArgumentException('Title cannot be empty');
-        }
-    }
-
-    private function validateAnnounce(string $announce): void {
-        if (trim($announce) === '') {
-            throw new InvalidArgumentException('Announce cannot be empty');
-        }
-    }
-
-    private function validateContent(string $content): void {
-        if (trim($content) === '') {
-            throw new InvalidArgumentException('Content cannot be empty');
-        }
-    }
-
-    private function validateImage(string $image): void {
-        if (trim($image) === '') {
-            throw new InvalidArgumentException('Image cannot be empty');
         }
     }
 }

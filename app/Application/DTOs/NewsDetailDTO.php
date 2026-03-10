@@ -7,34 +7,17 @@ namespace App\Application\DTOs;
 use InvalidArgumentException;
 
 final readonly class NewsDetailDTO {
-    public int $id;
-    public string $date;
-    public string $title;
-    public string $announce;
-    public string $content;
-    public string $image;
-
     public function __construct(
-        int $id,
-        string $date,
-        string $title,
-        string $announce,
-        string $content,
-        string $image
+        public int $id,
+        public string $date,
+        public string $title,
+        public string $announce,
+        public string $content,
+        public string $image
     ) {
         $this->validateId($id);
         $this->validateDate($date);
         $this->validateString($title, 'Title');
-        $this->validateString($announce, 'Announce');
-        $this->validateString($content, 'Content');
-        $this->validateString($image, 'Image');
-
-        $this->id       = $id;
-        $this->date     = $date;
-        $this->title    = $title;
-        $this->announce = $announce;
-        $this->content  = $content;
-        $this->image    = $image;
     }
 
     /**

@@ -9,7 +9,7 @@ use App\Application\DTOs\NewsListDTO;
 use App\Domain\ValueObjects\NewsId;
 
 interface NewsServiceInterface {
-    public function getLatestNews(): NewsDetailDTO;
+    public function getLatestNews(): ?NewsDetailDTO;
     public function getNewsList(int $page): NewsListDTO;
     public function getNewsDetail(NewsId $id): NewsDetailDTO;
 }
