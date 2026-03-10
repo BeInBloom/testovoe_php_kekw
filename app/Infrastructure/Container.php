@@ -18,6 +18,8 @@ use App\Presentation\Controllers\NewsController;
 use RuntimeException;
 
 final class Container {
+    private const string DEFAULT_DOCKER_LOG_PATH = '/var/log/app/app.log';
+
     /** @var array<string, mixed> */
     private array $instances = [];
 
@@ -28,7 +30,7 @@ final class Container {
     private function create(string $id): mixed {
         return match ($id) {
             LoggerInterface::class => new FileLogger(
-                $this->env('LOG_PATH', '/var/log/app/app.log')
+                $this->resolveLogPath()
             ),
             Connection::class => new Connection(
                 $this->env('DB_HOST', 'mysql'),
@@ -104,5 +106,34 @@ final class Container {
         $value = $_ENV[$name] ?? $_SERVER[$name] ?? getenv($name);
 
         return is_string($value) && $value !== '' ? $value : $default;
+    }
+
+    private function resolveLogPath(): string {
+        $configuredPath = $this->env('LOG_PATH', self::DEFAULT_DOCKER_LOG_PATH);
+
+        if ($this->canUseLogPath($configuredPath)) {
+            return $configuredPath;
+        }
+
+        if (
+            $configuredPath !== self::DEFAULT_DOCKER_LOG_PATH
+            && $this->canUseLogPath(self::DEFAULT_DOCKER_LOG_PATH)
+        ) {
+            return self::DEFAULT_DOCKER_LOG_PATH;
+        }
+
+        return $configuredPath;
+    }
+
+    private function canUseLogPath(string $logPath): bool {
+        $logDir = dirname($logPath);
+
+        if (is_dir($logDir)) {
+            return is_writable($logDir);
+        }
+
+        $parentDir = dirname($logDir);
+
+        return is_dir($parentDir) && is_writable($parentDir);
     }
 }
